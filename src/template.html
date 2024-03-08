@@ -3,85 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Room homepage</title>
-    <link rel="stylesheet" href="./style.css">
-    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
 </head>
 <body>
-  <div class="part-one">
-    <header>
-         <nav class="nav-holder">
-               <div class="first-nav" data-spread = "true">
-                    <button class="open-nav-btn" aria-label="open-menu"></button>
-                    <div class="mobile-logo">
-                        <img src="./assets/images/logo.svg" alt="logo name room">
-                    </div>
-                </div>
-                <div class="second-nav" data-spread = "false">
-                    <button class="close-nav-btn" aria-label="close-menu"></button>
-                    <div class="desktop-logo">
-                        <img src="./assets/images/logo.svg" alt="logo name room">
-                    </div>
-                    
-                        <ul class="links">
-                            <li>
-                                <a>home</a>
-                            </li>
-                            <li>
-                                <a>shop</a>
-                            </li>
-                            <li>
-                                <a>about</a>
-                            </li>
-                            <li>
-                                <a>contact</a>
-                            </li>
-                        </ul>  
-                   
-                </div>
-            </nav>
-         
-        <div class="slider-btns" data-slider-btns>
-            <button class="prev-btn" data-prev-btn aria-label="previous-button"></button>
-            <button class="next-btn" data-next-btn aria-label="Next-button"></button>
-        </div>
-       <div class="image-holder dark-mask" data-hero-holder></div>
-     
+    <header class="first-flex">
+        <h1 class="title">Ip Address Tracker</h1>
+        <form >
+            <label for="location" aria-label="enter-location"> </label>
+            <div class="form-input second-flex">
+                <input type="text" name="location" id="location" class="user-input" dat-user-location>
+                <button type="submit"  class="submit-btn" data-location-btn></button>
+            </div>
+            <p class="error-msg" data-error-msg>cannn</p>
+        </form>
     </header>
-  
-    <div class="about-product dark-mask">
-        <div class="article-holder" data-article></div>
-        
-        <div class="buy-btn-holder">
-            <button class="shop-btn">SHOP NOW 
-                <span>
-                    <img src="./assets/images/icon-arrow.svg" alt="right arrow" >
-                </span>
-            </button>   
-        </div>
-    </div>
-</div>
-
-    <!-- end of part one -->
-   
-
-    <main class="part-two dark-mask">
-        <figure class="dark-furniture ">
-             <img src="../src/assets/images/image-about-dark.jpg" alt="black furnitures in dark room" class="show-furniture">
-        </figure>
-        <section class="about-furniture">
-            <h2 class="furniture-title">ABOUT OUR FURNITURE</h2>
-            <p> our multifunctional collection blends design and function to suit your
-                individual taste.Make each room unique.or pick a cohesive theme that best
-                express your interests and what inspires you. Find the furniture pieces you
-                need.from traditional to contemporary styles or anything in between product 
-                specialists are available to help you create your dream space.
-            </p>
-        </section>
-        <figure class="light-furniture show-furniture ">
-            <img src="./assets/images/image-about-light.jpg" alt="white chair in light room" class="show-furniture">
-     </figure>
+    <main class="first-flex">
+        <ul class="user-detail-info second-flex">
+            <li class="ip-holder">
+                <p class="info-title">IP ADDRESS</p>
+                <P data-ip-address>123.123.456.345</P>
+            </li>
+            <li class="vertical-line"></li>
+            <li class="location-holder">
+                <p class="info-title">LOCATION</p>
+                <P class="info" data-user-location>ADDIS,NY</P>
+                <P class="info">1001</P>
+            </li>
+            <li class="vertical-line"></li>
+            <li class="time-holder">
+                <p class="info-title">TIMEZONE</p>
+                <P class="info" data-user-timezone>UTC-05:22</P>
+            </li>
+            <li class="vertical-line"></li>
+            
+            <li class="isp-holder">
+                <p class="info-title">ISP</p>
+                <P class="info" data-user-isp>star link</P>
+            </li>
+          
+            
+        </ul>
+        <div id="map"></div>
     </main>
+    
 </body>
 </html>
