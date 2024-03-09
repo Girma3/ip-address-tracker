@@ -1,3 +1,11 @@
+/* rubik-regular - latin */
+@font-face {
+  font-display: swap; 
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 400;
+  src: url('./assets/fonts/rubik-v28-latin-regular.woff2') format('woff2'); 
+}
 *{
   margin: 0;
   padding: 0;
@@ -36,23 +44,42 @@ main{
 }
 .title{
   font-size: 1.5rem;
+  font-weight: 700;
   padding-top: 0.5rem;
+  color: white;
+  letter-spacing: 2px;
 }
 /* form style */
 .user-input{
-  padding: 0.36rem;
+  padding: 0.6rem;
   border-radius: 0.5rem 0 0  0.5rem;
   border: 0;
-  width: 15rem;
+  width: 17rem;
+  font-weight: 500;
+}
+.user-input:focus{
+  border: 0;
+  outline: 0;
 }
 .submit-btn{
-  padding: 0.9rem;
+  padding: 1rem;
   border-radius:0  30%  30% 0 ;
   background: url(./assets/images/icon-arrow.svg) no-repeat center black;
-  border: 0;
+  border: 3px solid transparent;
+  outline: none;
+  
   }
 .submit-btn:hover{
   background-color: rgb(39, 36, 36);
+}
+.invalid{
+  border: 2px solid red;
+}
+.valid{
+  border: 2px solid green;
+}
+.error-msg{
+  color: rgb(251, 251, 0);
 }
 /* user info style */
 ul{
@@ -68,14 +95,11 @@ ul{
   padding: 1rem;
   border: 2px black solid;
   position: absolute;
-  top: 22%;
- 
+  top: 24%;
   z-index: 1000;
   border-radius: 0.5rem;
   background-color: white;
-  
   }
-
 .vertical-line{
   border-left: 1px solid black;
   height: 4rem;
@@ -84,12 +108,16 @@ ul{
 .info-title{
   font-size: 0.6rem;
   letter-spacing: 2px;
-  font-weight: 500;
+  font-weight: 700;
   text-align: start;
   padding-bottom: 3px;
+  color: hsl(0, 0%, 59%);
   }
 .info{
  text-align: start; 
+ color: hsl(0, 0%, 17%);
+ font-weight: 700;
+ letter-spacing: 1px;
 
 }
 [data-user-location]{
