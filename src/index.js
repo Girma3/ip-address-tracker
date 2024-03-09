@@ -118,6 +118,8 @@ submitBtn.addEventListener('click', (e) => {
       clearMap();
       maps(latitude, longitude);
       updateDom(response);
+      userInput.classList.add('valid');
+      errorMsg.textContent = '';
     }).catch(err => {
       console.log(err)
       userInput.classList.add('invalid');
@@ -136,6 +138,8 @@ submitBtn.addEventListener('click', (e) => {
       clearMap();
       maps(latitude, longitude);
       updateDom(response);
+      userInput.classList.add('valid');
+      errorMsg.textContent = '';
     }).catch(err => {
       console.log(err)
       userInput.classList.add('invalid');
