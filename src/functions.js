@@ -1,14 +1,36 @@
 // function to fetch data from https://geo.ipify.org to get ip address and location name,region
-async function getIpadress () {
+async function getbyDefaultipadress () {
   try {
     const request =
     await fetch('https://geo.ipify.org/api/v2/country?apiKey=at_C8EiGK0u9YbO7pyGFv9SHQiHAg8Er', { mode: 'cors' })
     const data = await request.json()
     return data
   } catch {
-    console.log('no data found for ip or domain')
+    console.log('no data found for this default ip ')
   }
 }
+// function to get adress by domain
+async function getbyDomain (domain) {
+  try {
+    const request =
+    await fetch(`https://geo.ipify.org/api/v2/country?apiKey=at_C8EiGK0u9YbO7pyGFv9SHQiHAg8Er&domain=${domain}`, { mode: 'cors' })
+    const data = await request.json()
+    return data
+  } catch {
+    console.log('no data found for this domain')
+  }
+}
+async function getbyIpadress (ipaddress) {
+  try {
+    const request =
+    await fetch(`https://geo.ipify.org/api/v2/country?apiKey=at_C8EiGK0u9YbO7pyGFv9SHQiHAg8Er&ipAddress=${ipaddress}`, { mode: 'cors' })
+    const data = await request.json()
+    return data
+  } catch {
+    console.log('no data found for this ip ')
+  }
+}
+
 // function to fetch data using address name and
 // get longitude and latitude of that place/address from https://geocode.map.co
 async function getGeocode (address) {
@@ -22,28 +44,29 @@ async function getGeocode (address) {
     console.log('no data for longitude and latitude found')
   }
 }
-async function getGeolocationdata () {
-  try {
-    const locationName = await getIpadress().then(response => {
-      return response
-    })
-    // array of location
-    console.log(locationName)
-    // get info aboout the using ip adress
-    const region = locationName.location.region;
-    const countryName = locationName.location.country;
-    const ipAdress = locationName.ip;
-    const isp = locationName.isp;
-    const timeZone = locationName.location.timezone;
-    const asnNumber = locationName.as.asn;
-    // get geolocation
-    const locationInfo = await getGeocode(region)
-    const longitude = await locationInfo[0].lon
-    const latitude = await locationInfo[0].lat
-    console.log(longitude)
-    return { longitude, latitude, countryName, region, ipAdress, isp, timeZone, asnNumber }
-  } catch {
-    console.log("can't find data for location or ip")
-  }
+
+async function getGeolocationdata (obj) {
+  const response = await obj;
+  const region = response.location.region;
+  const countryName = response.location.country;
+  const ipAdress = response.ip;
+  const isp = response.isp;
+  const timeZone = response.location.timezone;
+  const asnNumber = response.as.asn;
+  const geoData = await getGeocode(region)
+  const longitude = geoData[0].lon;
+  const latitude = geoData[0].lat;
+  return { region, countryName, ipAdress, isp, timeZone, asnNumber, latitude, longitude }
 }
-export { getGeolocationdata, getIpadress }
+// form style on focus
+const focusStyle = function (field, errDom) {
+  field.addEventListener('focus', () => {
+    if (field.className === 'invalid') errDom.style.display = 'none'
+  })
+  field.addEventListener('focusout', () => {
+    if (field.className === 'invalid') {
+      errDom.style.display = 'block'
+    }
+  })
+}
+export { getGeolocationdata, getbyDefaultipadress, getbyDomain, getbyIpadress, focusStyle }
