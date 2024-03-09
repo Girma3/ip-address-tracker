@@ -1,63 +1,39 @@
+import 'leaflet/dist/leaflet.css'
 import './style.css'
-import { product, appendElement, slider } from './room'
+import L from 'leaflet'
+import iconLocation from './assets/images/icon-location.svg'
+import { getGeolocationdata } from './functions.js'
+let userLongtiude;
+let UserLatitude;
+// api to get long and lat
 
-const navHolder = document.querySelector('.nav-holder')
-const maskDivs = document.querySelectorAll('.dark-mask')
-const closeNavbtn = document.querySelector('.close-nav-btn')
-const openNavbtn = document.querySelector('.open-nav-btn')
-const firstNav = document.querySelector('.first-nav')
-const secondNav = document.querySelector('.second-nav')
-const btns = document.querySelector('[data-slider-btns]')
-const divHolder = document.querySelector('[data-hero-holder]')
-const article = document.querySelector('[data-article]')
+getGeolocationdata().then(response => {
+  UserLatitude = Number(response.latitude)
+  userLongtiude = Number(response.longitude)
 
-closeNavbtn.addEventListener('click', () => {
-  if (secondNav.getAttribute('data-spread') === 'true') {
-    firstNav.setAttribute('data-spread', 'true')
-    secondNav.setAttribute('data-spread', 'false')
-    navHolder.classList.remove('close-nav-style')
-    maskDivs.forEach(darkMask => {
-      darkMask.classList.remove('black-mask')
-    })
-  }
-})
-openNavbtn.addEventListener('click', () => {
-  if (secondNav.getAttribute('data-spread') === 'false') {
-    firstNav.setAttribute('data-spread', 'false')
-    secondNav.setAttribute('data-spread', 'true')
-    navHolder.classList.add('close-nav-style')
-    maskDivs.forEach(darkMask => {
-      darkMask.classList.add('black-mask')
-    })
-  }
+  maps(UserLatitude, userLongtiude)
+}).catch(err => {
+  console.log(err, "can't find data")
 })
 
-maskDivs.forEach(mask => {
-  mask.addEventListener('click', () => {
-    mask.style.backgroundColor = 'transparent'
-  })
-})
-let sliderIndex = 0
-const restrict = function () {
-  if (sliderIndex >= product.length) {
-    sliderIndex = 0
-  } else if (sliderIndex < 0) {
-    sliderIndex = product.length - 1
-  }
-  return sliderIndex
+// add map to the screen
+
+// const map = L.map('map').flyTo([UserLatitude, userLongtiude], 20);
+function maps (lat, lon) {
+  const map = L.map('map').setView([lat, lon], 13);
+  const marker = L.marker([lat, lon]).addTo(map)
+  marker.bindPopup('<b>based on your ip your address is here').openPopup();
+  // icon
+  const greenIcon = L.icon({
+    iconUrl: `${iconLocation}`,
+    iconSize: [40, 65] // size of the icon
+  });
+  L.marker([lat, lon], { icon: greenIcon }).addTo(map);
+
+  console.log(userLongtiude, UserLatitude)
+
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(map);
 }
-btns.addEventListener('click', (e) => {
-  if (e.target.matches('[data-next-btn]')) {
-    sliderIndex++
-    restrict()
-    slider(product, divHolder, article, sliderIndex)
-  } else if (e.target.matches('[data-prev-btn]')) {
-    sliderIndex--
-    restrict()
-    slider(product, divHolder, article, sliderIndex)
-  }
-})
-function defaultSlider () {
-  appendElement(divHolder, article, sliderIndex)
-}
-defaultSlider()
