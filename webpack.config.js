@@ -7,13 +7,12 @@ module.exports = {
   mode: 'development',
   plugins: [
     new HtmlWebpackPlugin({
-      title: ' homepage',
+      title: ' Ip Address Tracker',
       favicon: './src/assets/images/favicon-32x32.png',
       template: './src/template.html'
     })
   ],
   output: {
-
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
     clean: true
