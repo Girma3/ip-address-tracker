@@ -7,19 +7,14 @@ let userLongtiude;
 let userLatitude;
 let userCountryName;
 let userPlaceName;
-// api to get long and lat
+const skeletonPage = document.querySelector('main');
+const userIp = document.querySelector('[data-ip-address]');
+const userLocation = document.querySelector('[data-user-location]');
+const userTimezone = document.querySelector('[data-user-timezone]')
+const userIsp = document.querySelector('[data-user-isp]');
+const userAsn = document.querySelector('[data-user-asn]');
 
-getGeolocationdata().then(response => {
-  userLatitude = Number(response.latitude)
-  userLongtiude = Number(response.longitude)
-  userCountryName = response.location.country
-  userPlaceName = response.location.region
-
-  maps(userLatitude, userLongtiude)
-}).catch(err => {
-  console.log(err, "can't find data")
-})
-// layers
+// base layers for the map
 const osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 19,
   attribution: '© OpenStreetMap'
@@ -46,10 +41,11 @@ const baseMaps = {
   street: googleStreets,
   hybrid: googleHybrid
 };
-
-// add map to the screen
-
-// const map = L.map('map').flyTo([UserLatitude, userLongtiude], 20);
+/*
+*function to create map using  https://leafletjs.com/
+*parmaeters: latitude,longitude, icon,placename,and country name
+*return map with given  positon at center and popup message
+*/
 function maps (lat, lon) {
   // default map layer is osm
   const map = L.map('map', { layers: [osm] }).setView([lat, lon], 13);
@@ -70,3 +66,21 @@ function maps (lat, lon) {
     marker.bindPopup(`${message}`).openPopup();
   });
 }
+getGeolocationdata().then(response => {
+  userLatitude = Number(response.latitude)
+  userLongtiude = Number(response.longitude)
+  userCountryName = response.countryName
+  userPlaceName = response.region
+  // update dom
+  userIp.textContent = response.ipAdress;
+  userIsp.textContent = response.isp;
+  userTimezone.textContent = response.timeZone;
+  userLocation.textContent = `${response.region}, ${response.countryName}`;
+  userAsn.textContent = response.asnNumber;
+  //   console.log(userCountryName)
+  console.log(response)
+
+  maps(userLatitude, userLongtiude)
+}).catch(err => {
+  console.log(err, "can't find data")
+})
