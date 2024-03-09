@@ -30,7 +30,6 @@ async function getbyIpadress (ipaddress) {
     console.log('no data found for this ip ')
   }
 }
-
 // function to fetch data using address name and
 // get longitude and latitude of that place/address from https://geocode.map.co
 async function getGeocode (address) {
