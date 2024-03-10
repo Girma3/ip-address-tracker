@@ -1,56 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    
-<link rel="icon" href="favicon-32x32.png"><script defer src="main.bundle.js"></script></head>
-<body >
-    <header class="first-flex">
-        <h1 class="title">Ip Address Tracker</h1>
-        <form >
-            <label for="location" aria-label="enter-location"> </label>
-            <div class="form-input">
-                <input type="text" name="location" id="location" class="user-input" placeholder="search for any ip address or domain">
-                <button type="submit"  class="submit-btn" data-location-btn></button>
-            </div>
-            <p class="error-msg" data-error-msg></p>
-        </form>
-    </header>
-    <div class="first-flex">
-       
-        <ul class="user-detail-info second-flex">
-            <li class="ip-holder">
-                <p class="info-title">IP ADDRESS</p>
-                <P class="info skeleton-text" data-ip-address></P>
-            </li>
-            <li class="vertical-line"></li>
-            <li class="location-holder">
-                <p class="info-title">LOCATION</p>
-                <P class="info skeleton-text" data-user-location></P>
-                <p class="info skeleton-text" data-user-asn></p>
-                
-            </li>
-            <li class="vertical-line"></li>
-            <li class="time-holder">
-                <p class="info-title">TIMEZONE</p>
-                <P class="info skeleton-text" data-user-timezone></P>
-            </li>
-            <li class="vertical-line"></li>
-            
-            <li class="isp-holder">
-                <p class="info-title">ISP</p>
-                <P class="info skeleton-text" data-user-isp></P>
-            </li>
-          </ul>
-       
-        </div>
-    <main class="skeleton-text">
-        <div id="map"></div>
-    </main>
+Html Webpack Plugin:
+<pre>
+  Error: HtmlWebpackPlugin: could not load file /home/gvibe/repos/ip-address-tracker/src/assets/images/favicon-3  2x32.png
   
-    
-    
-</body>
-</html>
+  - index.js:778 
+    [ip-address-tracker]/[html-webpack-plugin]/index.js:778:35
+  
+  - task_queues:95 process.processTicksAndRejections
+    node:internal/process/task_queues:95:5
+  
+</pre>
