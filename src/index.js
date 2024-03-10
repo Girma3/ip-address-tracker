@@ -108,7 +108,7 @@ submitBtn.addEventListener('click', (e) => {
   const value = userInput.value;
   const regexIp = /^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$/;
   const regexDomain = /^(?!-)(?!:\/\/)([a-zA-Z0-9-]+\.){0,5}[a-zA-Z0-9-][a-zA-Z0-9-]+\.[a-zA-Z]{2,64}?$/;
-  console.log(regexDomain.test(value))
+
   if (regexIp.test(value)) {
     const locationByip = getbyIpadress(value).then(response => {
       return response
