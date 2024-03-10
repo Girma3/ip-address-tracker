@@ -65,6 +65,7 @@ main{
   background: url(./assets/images/icon-arrow.svg) no-repeat center black;
   border: 3px solid transparent;
   outline: none;
+  cursor: pointer;
 }
 .submit-btn:hover{
   background-color: rgb(39, 36, 36);
@@ -94,6 +95,7 @@ ul{
   z-index: 1000;
   border-radius: 0.5rem;
   background-color: white;
+  box-shadow: 2px 2px 11px #0e1a33;
   }
 .vertical-line{
   border-left: 1px solid black;
@@ -108,11 +110,18 @@ ul{
   padding-bottom: 3px;
   color: hsl(0, 0%, 59%);
   }
+  .info-title:hover{
+    color: rgb(24, 3, 249);
+  }
 .info{
  text-align: start; 
  color: hsl(0, 0%, 17%);
  font-weight: 700;
  letter-spacing: 1px;
+}
+.info:hover{
+  transform: scale(1.1);
+  color:rgb(24, 3, 249);
 }
 [data-user-location]{
  padding-bottom:2px ;
@@ -128,11 +137,10 @@ ul{
  @media (max-width:870px) {
   .second-flex{
     flex-direction: column;
-    
-  }
+    }
   .user-detail-info{
     height: 200px;
-    width: 60%;
+    width: 30%;
     margin: 0.5rem;
     top: 16%;
   }
@@ -144,7 +152,7 @@ ul{
     height: 3rem;
    }
    .location-holder{
-    padding-bottom: 1.5rem;
+    padding:0.3rem 0 0.3rem 0;
    }
    .info,.info-title{
     text-align: center;
@@ -157,3 +165,21 @@ ul{
    }
   
  }
+ /* style skeleton  */
+ .skeleton-text{
+  width: 100px;
+  height: 23px;
+  border-radius: 0.3rem;
+  animation: load infinite 2s;
+ }
+ @keyframes load{
+  0%{
+    background-color: rgb(179, 251, 163);
+  }
+  50%{
+    background-color:rgb(92, 253, 78);
+  }
+  100%{
+    background-color:rgb(29, 22, 244);
+  }
+}
