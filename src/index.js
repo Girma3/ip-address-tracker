@@ -2,14 +2,15 @@ import 'leaflet/dist/leaflet.css'
 import './style.css'
 import L from 'leaflet'
 import iconLocation from './assets/images/icon-location.svg'
-import { getGeolocationdata, getbyDefaultipadress, getbyDomain, getbyIpadress, focusStyle } from './functions.js'
+import { getGeolocationdata, getbyDefaultipadress, getbyDomain, getbyIpadress, focusStyle, removeLoad } from './functions.js'
 
 let latitude;
 let longitude;
 let userCountryName;
 let userPlaceName;
 // const skeletonPage = document.querySelector('main');
-const errorMsg = document.querySelector('[data-error-msg]')
+const skeletoText = document.querySelectorAll('.skeleton-text');
+const errorMsg = document.querySelector('[data-error-msg]');
 const userInput = document.querySelector('.user-input');
 const submitBtn = document.querySelector('[data-location-btn]');
 const userIp = document.querySelector('[data-ip-address]');
@@ -17,12 +18,21 @@ const userLocation = document.querySelector('[data-user-location]');
 const userTimezone = document.querySelector('[data-user-timezone]')
 const userIsp = document.querySelector('[data-user-isp]');
 const userAsn = document.querySelector('[data-user-asn]');
+const loadArray = [...skeletoText]
 // function that clear existing map to redraw again
 function clearMap () {
   const container = L.DomUtil.get('map');
   if (container != null) {
     container._leaflet_id = null;
   }
+}
+// function to update dom
+function updateDom (response) {
+  userIp.textContent = response.ipAdress;
+  userIsp.textContent = response.isp;
+  userTimezone.textContent = response.timeZone;
+  userLocation.textContent = `${response.region}, ${response.countryName}`;
+  userAsn.textContent = response.asnNumber;
 }
 // base layers for the map
 const osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -77,13 +87,6 @@ async function maps (lat, lon) {
   });
 }
 
-function updateDom (response) {
-  userIp.textContent = response.ipAdress;
-  userIsp.textContent = response.isp;
-  userTimezone.textContent = response.timeZone;
-  userLocation.textContent = `${response.region}, ${response.countryName}`;
-  userAsn.textContent = response.asnNumber;
-}
 const locationBydefault = getbyDefaultipadress().then(response => {
   return response
 });
@@ -94,6 +97,7 @@ data.then(response => {
   userCountryName = response.countryName;
   userPlaceName = response.region;
   updateDom(response)
+  removeLoad(loadArray, 'skeleton-text')
   maps(latitude, longitude)
 }).catch(error => {
   console.log(error)
@@ -118,6 +122,7 @@ submitBtn.addEventListener('click', (e) => {
       clearMap();
       maps(latitude, longitude);
       updateDom(response);
+      removeLoad(loadArray, 'skeleton-text')
       userInput.classList.add('valid');
       errorMsg.textContent = '';
     }).catch(err => {
@@ -138,6 +143,7 @@ submitBtn.addEventListener('click', (e) => {
       clearMap();
       maps(latitude, longitude);
       updateDom(response);
+      removeLoad(loadArray, 'skeleton-text');
       userInput.classList.add('valid');
       errorMsg.textContent = '';
     }).catch(err => {
@@ -147,7 +153,7 @@ submitBtn.addEventListener('click', (e) => {
     });
   } else if (regexIp.test(value) === false && regexDomain.test(value) === false) {
     userInput.classList.add('invalid');
-    errorMsg.textContent = 'no data found please,check the format.(ip start from = 0.0.0.0  & domain = example.com)'
+    errorMsg.textContent = 'no data found please,check the format.';
   }
 })
 userInput.addEventListener('focus', () => {

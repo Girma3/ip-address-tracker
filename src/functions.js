@@ -68,4 +68,10 @@ const focusStyle = function (field, errDom) {
     }
   })
 }
-export { getGeolocationdata, getbyDefaultipadress, getbyDomain, getbyIpadress, focusStyle }
+// functin to remove loading class ,parameter arr of elment and classname
+function removeLoad (array, classname) {
+  array.forEach(element => {
+    element.classList.remove(classname)
+  });
+}
+export { getGeolocationdata, getbyDefaultipadress, getbyDomain, getbyIpadress, focusStyle, removeLoad }
