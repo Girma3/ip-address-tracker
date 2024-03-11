@@ -1,77 +1,99 @@
-// function to fetch data from https://geo.ipify.org to get ip address and location name,region
-async function getbyDefaultipadress () {
+// function to get ip when user load the page using ipify api
+async function getDefaultip () {
   try {
     const request =
-    await fetch('https://geo.ipify.org/api/v2/country?apiKey=at_C8EiGK0u9YbO7pyGFv9SHQiHAg8Er', { mode: 'cors' })
+      await fetch('https://api.ipify.org?format=json', { mode: 'cors' })
     const data = await request.json()
+    console.log(data)
     return data
   } catch {
     console.log('no data found for this default ip ')
   }
 }
-// function to get adress by domain
-async function getbyDomain (domain) {
+// get information using ip from https://ip-api.com
+// function that accept ip address and get information from ip-api and return promise
+async function getInfobyip (ip) {
+  console.log(ip)
+  const params = [
+    { query: `${ip}` }
+  ]
+  //  use generic number in url to select the promise  which property should contain
+  const url = 'http://ip-api.com/batch?fields=33615871'
+  const options = {
+    method: 'POST',
+    mode: 'cors',
+    body: JSON.stringify(params)
+  };
   try {
-    const request =
-    await fetch(`https://geo.ipify.org/api/v2/country?apiKey=at_C8EiGK0u9YbO7pyGFv9SHQiHAg8Er&domain=${domain}`, { mode: 'cors' })
-    const data = await request.json()
+    const request = await fetch(url, options);
+    const data = await request.json();
+    console.log(data)
     return data
   } catch {
-    console.log('no data found for this domain')
-  }
-}
-async function getbyIpadress (ipaddress) {
-  try {
-    const request =
-    await fetch(`https://geo.ipify.org/api/v2/country?apiKey=at_C8EiGK0u9YbO7pyGFv9SHQiHAg8Er&ipAddress=${ipaddress}`, { mode: 'cors' })
-    const data = await request.json()
-    return data
-  } catch {
-    console.log('no data found for this ip ')
-  }
-}
-// function to fetch data using address name and
-// get longitude and latitude of that place/address from https://geocode.map.co
-async function getGeocode (address) {
-  try {
-    const api = '65eba1e2d8689026564545ihgc7d288'
-    const request =
-    await fetch(`https://geocode.maps.co/search?q=${address}&api_key=${api}`, { mode: 'cors' })
-    const data = await request.json()
-    return data
-  } catch {
-    console.log('no data for longitude and latitude found')
+    console.log('no data found with this ip')
   }
 }
 
-async function getGeolocationdata (obj) {
-  const response = await obj;
-  const region = response.location.region;
-  const countryName = response.location.country;
-  const ipAdress = response.ip;
-  const isp = response.isp;
-  const timeZone = response.location.timezone;
-  const asnNumber = response.as.asn;
-  const geoData = await getGeocode(region)
-  const longitude = geoData[0].lon;
-  const latitude = geoData[0].lat;
-  return { region, countryName, ipAdress, isp, timeZone, asnNumber, latitude, longitude }
+async function getUtc (region) {
+  const url = `http://worldtimeapi.org/api/timezone/${region}`;
+  try {
+    const request = await fetch(url, { mode: 'cors' });
+    const data = await request.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log('Error fetching data:', error.message);
+  }
 }
-// form style on focus
-const focusStyle = function (field, errDom) {
-  field.addEventListener('focus', () => {
-    if (field.className === 'invalid') errDom.style.display = 'none'
-  })
-  field.addEventListener('focusout', () => {
-    if (field.className === 'invalid') {
-      errDom.style.display = 'block'
-    }
-  })
-}
-// functin to remove loading class ,parameter arr of elment and classname
-function removeLoad (array, classname) {
-  array.forEach(element => {
-    element.classList.remove(classname)
+// get ip  address by default
+function userDeafultIp () {
+  const ip = getDefaultip();
+  ip.then(response => {
+    const data = response;
+    const userIp = data.ip;
+    // get info using ip
+    const info = getInfobyip(userIp)
+    info.then(response => {
+      const timeZone = response[0].timezone;
+      // get utc using ip
+      const utc = getUtc(timeZone)
+      utc.then(response => {
+        const utcOffset = response.utc_offset
+        console.log(utcOffset)
+      });
+    });
   });
 }
-export { getGeolocationdata, getbyDefaultipadress, getbyDomain, getbyIpadress, focusStyle, removeLoad }
+const ip = '8.8.8.8'
+// const info = getInfobyip(ip);
+// info.then(response => {
+//   console.log(response)
+// })
+function userInfobyip (ip) {
+  const info = getInfobyip(ip);
+  info.then(response => {
+    const timeZone = response[0].timezone;
+    console.log(timeZone)
+    const utc = getUtc(timeZone);
+    utc.then(response => {
+      const utcOffset = response.utc_offset
+      console.log(utcOffset)
+    })
+  })
+}
+const domain = 'google.com'
+async function userInfobydomain (domain) {
+  const key = '5793b054c82e47f082fd1491eec2df0e'
+  const url = `https://api.ipgeolocation.io/ipgeo?apiKey=${key}&ip=dns.${domain}`;
+  try {
+    const request = await fetch(url, { mode: 'cors' });
+    const data = await request.json();
+    return data
+  } catch (error) {
+    console.log("can't find this domain", error.message)
+  }
+}
+const bydom = userInfobydomain(domain)
+bydom.then(response => {
+  console.log(response)
+})
