@@ -13,9 +13,8 @@ async function getDefaultip () {
 // function that accept ip address and get information from ip-api and return promise
 //
 async function getInfobyip (ip) {
-  const url = `https://ipapi.co/${ip}/json/`
   try {
-    const request = await fetch(url, { mode: 'cors' });
+    const request = await fetch(`https://ipapi.co/${ip}/json/`, { mode: 'cors' });
     const data = await request.json();
     return data
   } catch (error) {
