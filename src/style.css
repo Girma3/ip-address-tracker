@@ -84,10 +84,20 @@ ul{
   list-style: none;
   }
 .ip-holder, .location-holder, .time-holder, .isp-holder{
-  margin:  1rem  3rem 0 1rem;
   height: 3rem;
+  display: flex;
+  justify-content: space-around;
+  gap: 3rem;
  }
+ .isp-holder{
+  flex-direction: column;
+  gap: 1px;
+}
 .user-detail-info{
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  height: 100px;
   width: 750px;
   padding: 1rem;
   position: absolute;
@@ -99,15 +109,18 @@ ul{
   }
 .vertical-line{
   border-left: 1px solid black;
-  height: 4rem;
-  margin-top: 1rem;
+  height: 3rem;
+  position: relative;
+  bottom: 1px;
+  padding-right: 1rem;
+ 
 }
 .info-title{
+  text-align: start;
+  padding-bottom: 0.5rem;
   font-size: 0.6rem;
   letter-spacing: 2px;
   font-weight: 700;
-  text-align: start;
-  padding-bottom: 3px;
   color: hsl(0, 0%, 59%);
   }
   .info-title:hover{
@@ -118,6 +131,7 @@ ul{
  color: hsl(0, 0%, 17%);
  font-weight: 700;
  letter-spacing: 1px;
+ padding-bottom: 1rem;
 }
 .info:hover{
   transform: scale(1.1);
@@ -135,28 +149,37 @@ ul{
   background-color: rgb(184, 184, 254);
  }
  @media (max-width:870px) {
+  .skeleton-text{
+   width:200px;
+  }
   .second-flex{
     flex-direction: column;
     }
   .user-detail-info{
-    height: 200px;
-    width: 30%;
-    margin: 0.5rem;
+    flex-direction: column;
+    flex-wrap: wrap;
+    height: 270px;
+    width:55%;
+    padding: 0.5rem;
     top: 16%;
   }
   .vertical-line{
     display: none;
   }
+  .info{
+    text-align: center;
+  }
+  .info-title{
+    padding: 0;
+    text-align: center;
+  }
   .ip-holder, .location-holder, .time-holder, .isp-holder{
     margin: 0;
     height: 3rem;
+    align-items: center;
    }
-   .location-holder{
-    padding:0.3rem 0 0.3rem 0;
-   }
-   .info,.info-title{
-    text-align: center;
-   }
+  
+  
    .user-input{
     width: 75%;
    }
@@ -180,6 +203,11 @@ ul{
     background-color:rgb(92, 253, 78);
   }
   100%{
-    background-color:rgb(29, 22, 244);
+    background-color:rgb(17, 237, 72);
   }
+}
+.skeleton{
+ 
+  border-radius: 0.3rem;
+  animation: load infinite 2s;
 }
