@@ -7,7 +7,6 @@ module.exports = {
   mode: 'development',
   plugins: [
     new HtmlWebpackPlugin({
-      title: ' Ip Address Tracker',
       favicon: './src/assets/images/favicon-32x32.png',
       template: './src/template.html'
     })
