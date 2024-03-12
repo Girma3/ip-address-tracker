@@ -13,7 +13,6 @@ const userIpaddress = document.querySelector('[data-ip-address]');
 const userLocation = document.querySelector('[data-user-location]');
 const userTimezone = document.querySelector('[data-user-timezone]')
 const userIsp = document.querySelector('[data-user-isp]');
-const userAsn = document.querySelector('[data-user-asn]');
 const loadArray = [...skeletoText];
 
 let latitude;
