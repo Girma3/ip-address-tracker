@@ -210,7 +210,7 @@ ul{
   }
 }
 .skeleton{
- 
   border-radius: 0.3rem;
   animation: load infinite 2s;
+  background-color: black;
 }
