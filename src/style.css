@@ -6,6 +6,9 @@
   font-weight: 400;
   src: url('./assets/fonts/rubik-v28-latin-regular.woff2') format('woff2'); 
 }
+.leaflet-default-icon-path {
+    background-image: url(https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png);
+  }
 *{
   margin: 0;
   padding: 0;

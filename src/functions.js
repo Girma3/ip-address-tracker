@@ -4,7 +4,6 @@ async function getDefaultip () {
     const request =
       await fetch('https://api.ipify.org?format=json', { mode: 'cors' })
     const data = await request.json()
-    console.log(data)
     return data
   } catch (error) {
     console.log('no data found for this default ip '.error.message)
@@ -18,7 +17,6 @@ async function getInfobyip (ip) {
   try {
     const request = await fetch(url, { mode: 'cors' });
     const data = await request.json();
-    console.log(data)
     return data
   } catch (error) {
     console.log(error, 'no data found')

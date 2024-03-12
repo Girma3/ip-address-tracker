@@ -3,7 +3,6 @@ import './style.css'
 import L from 'leaflet'
 import iconLocation from './assets/images/icon-location.svg'
 import { getDefaultip, getInfobyip, focusStyle } from './functions'
-
 const skeletoText = document.querySelectorAll('.skeleton-text');
 const skeletonMap = document.querySelector('.skeleton')
 const errorMsg = document.querySelector('[data-error-msg]');
@@ -14,12 +13,10 @@ const userLocation = document.querySelector('[data-user-location]');
 const userTimezone = document.querySelector('[data-user-timezone]')
 const userIsp = document.querySelector('[data-user-isp]');
 const loadArray = [...skeletoText];
-
 let latitude;
 let longitude;
 let userCountryName;
 let userPlaceName;
-
 // function to clear the  map before redraw again
 function clearMap () {
   const container = L.DomUtil.get('map');
@@ -67,7 +64,7 @@ const baseMaps = {
 */
 function maps (lat, lon) {
   // default map layer is osm
-  const map = L.map('map', { layers: [osm] }).setView([lat, lon], 13);
+  const map = L.map('map', { layers: [googleHybrid] }).setView([lat, lon], 13);
   // add layer control
   L.control.layers(baseMaps).addTo(map);
   // pop up message
@@ -78,13 +75,15 @@ function maps (lat, lon) {
     iconUrl: `${iconLocation}`,
     iconSize: [40, 65], // size of the icon
     iconAnchor: [16, 80]
+
   });
+
   // add event on icon click
   L.marker([lat, lon], { icon: blackIcon }).addTo(map).on('click', () => {
     marker.bindPopup(`${message}`).openPopup();
   });
 }
-// get ip on load
+// get ip address on load
 const ip = getDefaultip();
 ip.then(response => {
   const data = response;
@@ -108,7 +107,6 @@ ip.then(response => {
     maps(latitude, longitude)
   });
 });
-
 submitBtn.addEventListener('click', (e) => {
   e.preventDefault();
   const value = userInput.value;
