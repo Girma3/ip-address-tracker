@@ -2,37 +2,37 @@ import 'leaflet/dist/leaflet.css'
 import './style.css'
 import L from 'leaflet'
 import iconLocation from './assets/images/icon-location.svg'
-import { getGeolocationdata, getbyDefaultipadress, getbyDomain, getbyIpadress, focusStyle, removeLoad } from './functions.js'
+import { getDefaultip, getInfobyip, focusStyle } from './functions'
+
+const skeletoText = document.querySelectorAll('.skeleton-text');
+const skeletonMap = document.querySelector('.skeleton')
+const errorMsg = document.querySelector('[data-error-msg]');
+const userInput = document.querySelector('.user-input');
+const submitBtn = document.querySelector('[data-location-btn]');
+const userIpaddress = document.querySelector('[data-ip-address]');
+const userLocation = document.querySelector('[data-user-location]');
+const userTimezone = document.querySelector('[data-user-timezone]')
+const userIsp = document.querySelector('[data-user-isp]');
+const userAsn = document.querySelector('[data-user-asn]');
+const loadArray = [...skeletoText];
 
 let latitude;
 let longitude;
 let userCountryName;
 let userPlaceName;
-// const skeletonPage = document.querySelector('main');
-const skeletoText = document.querySelectorAll('.skeleton-text');
-const errorMsg = document.querySelector('[data-error-msg]');
-const userInput = document.querySelector('.user-input');
-const submitBtn = document.querySelector('[data-location-btn]');
-const userIp = document.querySelector('[data-ip-address]');
-const userLocation = document.querySelector('[data-user-location]');
-const userTimezone = document.querySelector('[data-user-timezone]')
-const userIsp = document.querySelector('[data-user-isp]');
-const userAsn = document.querySelector('[data-user-asn]');
-const loadArray = [...skeletoText]
-// function that clear existing map to redraw again
+
+// function to clear the  map before redraw again
 function clearMap () {
   const container = L.DomUtil.get('map');
   if (container != null) {
     container._leaflet_id = null;
   }
 }
-// function to update dom
-function updateDom (response) {
-  userIp.textContent = response.ipAdress;
-  userIsp.textContent = response.isp;
-  userTimezone.textContent = response.timeZone;
-  userLocation.textContent = `${response.region}, ${response.countryName}`;
-  userAsn.textContent = response.asnNumber;
+// function to remove load element(skeleton text class)
+function removeLoad (array, classname) {
+  array.forEach(element => {
+    element.classList.remove(classname)
+  });
 }
 // base layers for the map
 const osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -66,14 +66,13 @@ const baseMaps = {
 *parmaeters: latitude,longitude, icon,placename,and country name
 *return map with given  positon at center and popup message
 */
-
-async function maps (lat, lon) {
+function maps (lat, lon) {
   // default map layer is osm
   const map = L.map('map', { layers: [osm] }).setView([lat, lon], 13);
   // add layer control
   L.control.layers(baseMaps).addTo(map);
   // pop up message
-  const message = `<b>your ip address located in ${userPlaceName}, ${userCountryName}`
+  const message = `<b>The ip address located in ${userPlaceName}, ${userCountryName}`
   const marker = L.marker([lat, lon], { alt: `${userPlaceName}` }).addTo(map).bindPopup(`${message}`).openPopup();
   // add icon
   const blackIcon = L.icon({
@@ -86,76 +85,58 @@ async function maps (lat, lon) {
     marker.bindPopup(`${message}`).openPopup();
   });
 }
+// get ip on load
+const ip = getDefaultip();
+ip.then(response => {
+  const data = response;
+  const userIp = data.ip;
 
-const locationBydefault = getbyDefaultipadress().then(response => {
-  return response
+  // get info using ip
+  const info = getInfobyip(userIp)
+  info.then(response => {
+    latitude = response.latitude;
+    longitude = response.longitude;
+    userCountryName = response.country_name;
+    userPlaceName = response.city;
+    // update dom element
+    userIpaddress.textContent = response.ip;
+    userLocation.textContent = `${response.city}, ${response.region_code}`;
+    userTimezone.textContent = response.utc_offset;
+    userIsp.textContent = response.org;
+    skeletonMap.classList.remove('.skeleton');
+    removeLoad(loadArray, 'skeleton-text');
+    clearMap();
+    maps(latitude, longitude)
+  });
 });
-const data = getGeolocationdata(locationBydefault)
-data.then(response => {
-  latitude = Number(response.latitude);
-  longitude = Number(response.longitude);
-  userCountryName = response.countryName;
-  userPlaceName = response.region;
-  updateDom(response)
-  removeLoad(loadArray, 'skeleton-text')
-  maps(latitude, longitude)
-}).catch(error => {
-  console.log(error)
-  errorMsg.textContent = 'no data found Please, try later'
-})
+
 submitBtn.addEventListener('click', (e) => {
   e.preventDefault();
   const value = userInput.value;
   const regexIp = /^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$/;
-  const regexDomain = /^(?!-)(?!:\/\/)([a-zA-Z0-9-]+\.){0,5}[a-zA-Z0-9-][a-zA-Z0-9-]+\.[a-zA-Z]{2,64}?$/;
-
   if (regexIp.test(value)) {
-    const locationByip = getbyIpadress(value).then(response => {
-      return response
-    });
-    const data = getGeolocationdata(locationByip)
-    data.then(response => {
-      latitude = Number(response.latitude);
-      longitude = Number(response.longitude);
-      userCountryName = response.countryName;
-      userPlaceName = response.region;
+    const userIp = value;
+    const info = getInfobyip(userIp)
+    info.then(response => {
+      latitude = response.latitude;
+      longitude = response.longitude;
+      userCountryName = response.country_name;
+      userPlaceName = response.city;
+      // dom elment
+      userIpaddress.textContent = response.ip;
+      userLocation.textContent = `${response.city}, ${response.region_code}`;
+      userTimezone.textContent = response.utc_offset;
+      userIsp.textContent = response.org;
       clearMap();
-      maps(latitude, longitude);
-      updateDom(response);
-      removeLoad(loadArray, 'skeleton-text')
+      maps(latitude, longitude)
       userInput.classList.add('valid');
       errorMsg.textContent = '';
-    }).catch(err => {
-      console.log(err)
-      userInput.classList.add('invalid');
-      errorMsg.textContent = 'no data found in this ip address';
     });
-  } else if (regexDomain.test(value)) {
-    const locationBydomain = getbyDomain(value).then(response => {
-      return response
-    })
-    const data = getGeolocationdata(locationBydomain)
-    data.then(response => {
-      latitude = Number(response.latitude);
-      longitude = Number(response.longitude);
-      userCountryName = response.countryName;
-      userPlaceName = response.region;
-      clearMap();
-      maps(latitude, longitude);
-      updateDom(response);
-      removeLoad(loadArray, 'skeleton-text');
-      userInput.classList.add('valid');
-      errorMsg.textContent = '';
-    }).catch(err => {
-      console.log(err)
-      userInput.classList.add('invalid');
-      errorMsg.textContent = 'no data found by this domain'
-    });
-  } else if (regexIp.test(value) === false && regexDomain.test(value) === false) {
+  } else if (regexIp.test(value) === false) {
     userInput.classList.add('invalid');
-    errorMsg.textContent = 'no data found please,check the format.';
+    errorMsg.textContent = 'no data found, please check the format.';
   }
-})
+});
 userInput.addEventListener('focus', () => {
   focusStyle(userInput, errorMsg)
-})
+});
