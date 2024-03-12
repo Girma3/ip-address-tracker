@@ -6,94 +6,34 @@ async function getDefaultip () {
     const data = await request.json()
     console.log(data)
     return data
-  } catch {
-    console.log('no data found for this default ip ')
+  } catch (error) {
+    console.log('no data found for this default ip '.error.message)
   }
 }
-// get information using ip from https://ip-api.com
+// get information using ip from https://ipapi.co/#api
 // function that accept ip address and get information from ip-api and return promise
+//
 async function getInfobyip (ip) {
-  console.log(ip)
-  const params = [
-    { query: `${ip}` }
-  ]
-  //  use generic number in url to select the promise  which property should contain
-  const url = 'http://ip-api.com/batch?fields=33615871'
-  const options = {
-    method: 'POST',
-    mode: 'cors',
-    body: JSON.stringify(params)
-  };
+  const url = `https://ipapi.co/${ip}/json/`
   try {
-    const request = await fetch(url, options);
+    const request = await fetch(url, { mode: 'cors' });
     const data = await request.json();
     console.log(data)
     return data
-  } catch {
-    console.log('no data found with this ip')
+  } catch (error) {
+    console.log(error, 'no data found')
   }
 }
 
-async function getUtc (region) {
-  const url = `http://worldtimeapi.org/api/timezone/${region}`;
-  try {
-    const request = await fetch(url, { mode: 'cors' });
-    const data = await request.json();
-    console.log(data);
-    return data;
-  } catch (error) {
-    console.log('Error fetching data:', error.message);
-  }
-}
-// get ip  address by default
-function userDeafultIp () {
-  const ip = getDefaultip();
-  ip.then(response => {
-    const data = response;
-    const userIp = data.ip;
-    // get info using ip
-    const info = getInfobyip(userIp)
-    info.then(response => {
-      const timeZone = response[0].timezone;
-      // get utc using ip
-      const utc = getUtc(timeZone)
-      utc.then(response => {
-        const utcOffset = response.utc_offset
-        console.log(utcOffset)
-      });
-    });
+// function to hide error message on focus
+function focusStyle (field, errDom) {
+  field.addEventListener('focus', () => {
+    if (field.className === 'invalid') errDom.style.display = 'none';
+  });
+  field.addEventListener('focusout', () => {
+    if (field.className === 'invalid') {
+      errDom.style.display = 'block';
+    }
   });
 }
-const ip = '8.8.8.8'
-// const info = getInfobyip(ip);
-// info.then(response => {
-//   console.log(response)
-// })
-function userInfobyip (ip) {
-  const info = getInfobyip(ip);
-  info.then(response => {
-    const timeZone = response[0].timezone;
-    console.log(timeZone)
-    const utc = getUtc(timeZone);
-    utc.then(response => {
-      const utcOffset = response.utc_offset
-      console.log(utcOffset)
-    })
-  })
-}
-const domain = 'google.com'
-async function userInfobydomain (domain) {
-  const key = '5793b054c82e47f082fd1491eec2df0e'
-  const url = `https://api.ipgeolocation.io/ipgeo?apiKey=${key}&ip=dns.${domain}`;
-  try {
-    const request = await fetch(url, { mode: 'cors' });
-    const data = await request.json();
-    return data
-  } catch (error) {
-    console.log("can't find this domain", error.message)
-  }
-}
-const bydom = userInfobydomain(domain)
-bydom.then(response => {
-  console.log(response)
-})
+export { getDefaultip, getInfobyip, focusStyle }
